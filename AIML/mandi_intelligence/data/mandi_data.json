@@ -1,0 +1,70 @@
+{
+  "mandis": [
+    {
+      "id": "MANDI_A",
+      "name": "Sardar Patel Mandi",
+      "location": "Sector 21, Gandhinagar",
+      "distance_km": 5,
+      "crowd_level": "Low",
+      "crop_prices": {
+        "Onion": 30,
+        "Tomato": 22,
+        "Potato": 28
+      }
+    },
+    {
+      "id": "MANDI_B",
+      "name": "Kalol Agricultural Market",
+      "location": "Kalol",
+      "distance_km": 15,
+      "crowd_level": "High",
+      "crop_prices": {
+        "Onion": 32,
+        "Tomato": 24,
+        "Potato": 30
+      }
+    },
+    {
+      "id": "MANDI_C",
+      "name": "Mehsana Grain Market",
+      "location": "Mehsana",
+      "distance_km": 25,
+      "crowd_level": "Low",
+      "crop_prices": {
+        "Onion": 35,
+        "Tomato": 26,
+        "Potato": 33
+      }
+    },
+    {
+      "id": "MANDI_D",
+      "name": "Visnagar Wholesale Market",
+      "location": "Visnagar",
+      "distance_km": 35,
+      "crowd_level": "Medium",
+      "crop_prices": {
+        "Onion": 38,
+        "Tomato": 28,
+        "Potato": 36
+      }
+    },
+    {
+      "id": "MANDI_E",
+      "name": "Ahmedabad APMC",
+      "location": "Ahmedabad",
+      "distance_km": 40,
+      "crowd_level": "Low",
+      "crop_prices": {
+        "Onion": 40,
+        "Tomato": 30,
+        "Potato": 38
+      }
+    }
+  ],
+  "metadata": {
+    "base_location": "Gandhinagar, Gujarat",
+    "currency": "INR",
+    "price_unit": "per_kg",
+    "last_updated": "2026-02-07"
+  }
+}

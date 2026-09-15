@@ -1,0 +1,19 @@
+[project]
+name = "sar-processing"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "earthengine-api>=1.7.12",
+    "psycopg2-binary>=2.9.11",
+    "python-dotenv>=1.2.1",
+    "shapely>=2.1.2",
+]
+
+[dependency-groups]
+dev = [
+    "black>=26.1.0",
+    "pytest>=9.0.2",
+    "ruff>=0.15.0",
+]

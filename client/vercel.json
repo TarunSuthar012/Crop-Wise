@@ -1,0 +1,12 @@
+{
+  "rewrites": [
+    {
+      "source": "/mandi/:path*",
+      "destination": "https://beejrakshak.onrender.com/mandi/:path*"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ]
+}

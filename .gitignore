@@ -1,0 +1,50 @@
+node_modules/
+dist/
+.vite/
+.next/
+build/
+coverage/
+.cache/
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+.venv/
+venv/
+ENV/
+env/
+.mypy_cache/
+.pytest_cache/
+.ruff_cache/
+.pyre/
+.ipynb_checkpoints/
+
+# Environment files
+.env
+.env.*
+!.env.example
+!.env.sample
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# OS/Editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+
+# Expo/React Native
+.expo/
+.expo-shared/
+
+# Misc
+*.pem
+*.key

@@ -1,0 +1,17 @@
+export const LANGUAGES = [
+  { code: 'en', label: 'English' },
+  { code: 'hi', label: 'Hindi' },
+  { code: 'bn', label: 'Bengali' },
+  { code: 'te', label: 'Telugu' },
+  { code: 'mr', label: 'Marathi' },
+  { code: 'ta', label: 'Tamil' },
+  { code: 'ur', label: 'Urdu' },
+  { code: 'gu', label: 'Gujarati' },
+  { code: 'kn', label: 'Kannada' },
+  { code: 'ml', label: 'Malayalam' },
+  { code: 'pa', label: 'Punjabi' },
+  { code: 'or', label: 'Odia' },
+  { code: 'as', label: 'Assamese' },
+  { code: 'ne', label: 'Nepali' },
+  { code: 'sa', label: 'Sanskrit' },
+]

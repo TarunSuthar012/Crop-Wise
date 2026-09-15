@@ -1,0 +1,69 @@
+[
+    {
+        "id": "SCH-100",
+        "name": "Pradhan Mantri Fasal Bima Yojana",
+        "description": "Central government crop insurance against natural calamities and pests.",
+        "scope": "Central",
+        "tags": [
+            "all_farmers"
+        ],
+        "eligibility_text": "All farmers including sharecroppers.",
+        "official_url": "https://pmfby.gov.in/",
+        "apply_url": "https://pmfby.gov.in/",
+        "documents": ["Aadhaar card", "Land record or lease document", "Bank account details"]
+    },
+    {
+        "id": "SCH-101",
+        "name": "Mukhyamantri Kisan Sahay Yojana (Gujarat)",
+        "description": "Gujarat state scheme replacing insurance companies. Zero premium coverage.",
+        "scope": "Gujarat",
+        "tags": [
+            "all_farmers"
+        ],
+        "eligibility_text": "Farmers in Gujarat with land < 4 hectares.",
+        "max_land_size_hectares": 4,
+        "official_url": "https://ikhedut.gujarat.gov.in/",
+        "apply_url": "https://ikhedut.gujarat.gov.in/",
+        "documents": ["Aadhaar card", "Land record", "Bank account details"]
+    },
+    {
+        "id": "SCH-102",
+        "name": "PM Kisan Samman Nidhi",
+        "description": "Income support of Rs. 6000 per year in 3 installments.",
+        "scope": "All",
+        "tags": [
+            "small_farmer"
+        ],
+        "eligibility_text": "Small and marginal farmers (< 2 hectares).",
+        "max_land_size_hectares": 2,
+        "official_url": "https://pmkisan.gov.in/",
+        "apply_url": "https://pmkisan.gov.in/",
+        "documents": ["Aadhaar card", "Land record", "Bank account details"]
+    },
+    {
+        "id": "SCH-103",
+        "name": "Telangana Rythu Bandhu",
+        "description": "Investment support for agriculture and horticulture crops.",
+        "scope": "Telangana",
+        "tags": [
+            "all_farmers"
+        ],
+        "eligibility_text": "Farmers in Telangana.",
+        "official_url": "https://rythubharosa.telangana.gov.in/",
+        "apply_url": "https://rythubharosa.telangana.gov.in/",
+        "documents": ["Aadhaar card", "Land record", "Bank account details"]
+    },
+    {
+        "id": "SCH-104",
+        "name": "Soil Health Card Scheme",
+        "description": "Subsidized soil testing and fertilizer recommendations.",
+        "scope": "All",
+        "tags": [
+            "all_farmers"
+        ],
+        "eligibility_text": "All farmers.",
+        "official_url": "https://soilhealth.dac.gov.in/",
+        "apply_url": "https://soilhealth.dac.gov.in/",
+        "documents": ["Aadhaar card", "Land details"]
+    }
+]

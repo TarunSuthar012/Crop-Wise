@@ -1,0 +1,15 @@
+{
+  "name": "beejrakshak",
+  "private": true,
+  "scripts": {
+    "dev": "concurrently -n web,aiml -c cyan,magenta \"npm run dev:client\" \"npm run dev:aiml\"",
+    "dev:client": "cd client && npm run dev",
+    "dev:aiml": "cd AIML && py -m uvicorn main:app --host 0.0.0.0 --port 8001 --reload",
+    "build": "npm run build:client",
+    "build:client": "cd client && npm run build",
+    "install:all": "npm install && cd client && npm install && cd ../mobile && npm install"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}

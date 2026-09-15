@@ -1,0 +1,202 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    @apply antialiased scroll-smooth;
+    overflow-x: hidden;
+  }
+
+  body {
+    @apply text-stone-800 bg-stone-50;
+    overflow-x: hidden;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  /* Custom scrollbar */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  ::-webkit-scrollbar-track {
+    @apply bg-transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-stone-300 rounded-full;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-stone-400;
+  }
+}
+
+@layer components {
+
+  /* Glassmorphism card */
+  .glass {
+    @apply bg-white/70 backdrop-blur-xl border border-white/20;
+  }
+
+  .glass-dark {
+    @apply bg-black/20 backdrop-blur-xl border border-white/10;
+  }
+
+  /* Gradient text helper */
+  .gradient-text {
+    @apply text-transparent bg-clip-text;
+  }
+
+  /* Input focus ring animation — responsive touch targets */
+  .input-field {
+    @apply w-full min-w-0 px-3 py-3 sm:px-4 sm:py-3.5 rounded-xl border-2 border-stone-200 bg-white/80 text-base transition-all duration-200 outline-none;
+  }
+
+  /* Select field styling */
+  .select-field {
+    @apply w-full min-w-0 px-3 py-3 sm:px-4 sm:py-3.5 rounded-xl border-2 border-stone-200 bg-white/80 text-base transition-all duration-200 outline-none appearance-none cursor-pointer;
+  }
+
+  /* Hover lift effect */
+  .hover-lift {
+    @apply transition-all duration-300;
+  }
+
+  .hover-lift:hover {
+    @apply -translate-y-1;
+    box-shadow: 0 20px 40px -12px rgba(0, 0, 0, 0.12);
+  }
+
+  /* Staggered animation delay helpers */
+  .stagger-1 {
+    animation-delay: 0.05s;
+  }
+
+  .stagger-2 {
+    animation-delay: 0.10s;
+  }
+
+  .stagger-3 {
+    animation-delay: 0.15s;
+  }
+
+  .stagger-4 {
+    animation-delay: 0.20s;
+  }
+
+  .stagger-5 {
+    animation-delay: 0.25s;
+  }
+
+  .stagger-6 {
+    animation-delay: 0.30s;
+  }
+}
+
+@layer utilities {
+  .text-shadow-sm {
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  }
+
+  .text-shadow {
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+  }
+
+  .text-shadow-lg {
+    text-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  }
+}
+
+/* Google Translate Widget Styling */
+.google-translate-container {
+  display: inline-block;
+}
+
+.goog-te-gadget {
+  font-family: inherit !important;
+  font-size: 0 !important;
+}
+
+.goog-te-gadget .goog-te-combo {
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid #e7e5e4;
+  background: rgba(255, 255, 255, 0.7);
+  font-size: 14px;
+  font-weight: 600;
+  color: #44403c;
+  cursor: pointer;
+  outline: none;
+  transition: all 0.2s;
+}
+
+.goog-te-gadget .goog-te-combo:hover {
+  background: white;
+  border-color: #d6d3d1;
+}
+
+.goog-te-gadget .goog-te-combo:focus {
+  border-color: #10b981;
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
+}
+
+/* Hide Google branding */
+.goog-te-gadget>span,
+.goog-te-gadget img,
+.goog-logo-link {
+  display: none !important;
+}
+
+/* ── Google Translate layout fixes ── */
+
+/* Hide the banner frame at top */
+.goog-te-banner-frame {
+  display: none !important;
+}
+
+/* Google Translate pushes body down + sets position: relative — undo both */
+body {
+  top: 0 !important;
+  position: static !important;
+}
+
+/* Google Translate sets overflow:hidden on html when active — undo */
+html.translated-ltr,
+html.translated-rtl {
+  overflow: auto !important;
+}
+
+/* Hide the top skip-translate bar Google injects before #root */
+body > .skiptranslate {
+  display: none !important;
+  height: 0 !important;
+}
+
+/* But keep the widget dropdown inside our container visible */
+.google-translate-container .skiptranslate,
+.google-translate-container .goog-te-gadget {
+  display: inline-block !important;
+  height: auto !important;
+}
+
+/* Hide tooltip popups */
+#goog-gt-tt,
+.goog-te-balloon-frame {
+  display: none !important;
+}
+
+/* Ensure the translated <font> wrappers don't break flex */
+font {
+  display: contents !important;
+}
+
+/* Root always fills viewport; safe area for notched devices */
+#root {
+  min-height: 100vh;
+  min-height: 100dvh;
+  width: 100%;
+  max-width: 100vw;
+  overflow-x: hidden;
+}

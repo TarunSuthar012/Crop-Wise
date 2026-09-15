@@ -1,0 +1,1 @@
+# Mandi Intelligence Core Module
