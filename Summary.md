@@ -1,32 +1,32 @@
-# Crop-Wise Project Summary (सरल हिंदी में)
+# Crop-Wise Project Summary (Simple English)
 
-यह दस्तावेज़ Crop-Wise project को आसान भाषा में समझाता है—यह किसके लिए है, इसके कौन-कौन से भाग हैं, वे कैसे काम करते हैं, और इसे चलाने के लिए क्या चाहिए। इसमें वही बातें शामिल हैं जो repository के code में मिली हैं; जहाँ कोई feature सीमित, optional या अभी पूरी तरह production-ready नहीं है, वहाँ साफ़ बताया गया है।
+This document explains the Crop-Wise project in simple English: who it is for, what its parts do, how they work, and what is needed to run them. It describes what is present in the repository. Features that are optional, limited, or not fully production-ready are clearly identified.
 
-## 1. एक नज़र में
+## 1. Project at a glance
 
-**Crop-Wise** किसानों और project पर काम करने वाले लोगों के लिए एक agriculture सहायता platform है। इसका मुख्य web app किसान को मौसम, फसल बेचने की जगह, खाद की योजना और सरकारी योजनाओं की जानकारी देता है। साथ में mobile app, खेती से जुड़े सवालों का chatbot और खेत की satellite (SAR) जानकारी लेने वाला अलग processing program भी है।
+**Crop-Wise** is an agriculture support platform for farmers and project contributors. Its main web app provides weather information, suggestions on where to sell crops, fertilizer plans, and information about government schemes. The project also includes a mobile app, a farming chatbot, and a separate program for processing satellite (SAR) data about fields.
 
-सरल शब्दों में:
+In simple terms:
 
-> किसान अपनी जानकारी देता है → app उपलब्ध मौसम और खेती के data को लेता है → अलग-अलग services सलाह तैयार करती हैं → सलाह dashboard पर दिखाई जाती है।
+> The farmer provides information → the app gets available weather and farming data → services prepare suggestions → the dashboard shows those suggestions.
 
-यह app सलाह और जानकारी देता है। यह सरकारी योजना में अपने-आप आवेदन नहीं करता, claim मंज़ूर नहीं करता और किसी सलाह को official सरकारी निर्णय नहीं बनाता।
+The app provides information and assistance. It does not automatically apply for government schemes, approve insurance claims, or turn its suggestions into official government decisions.
 
-## 2. पूरे project का नक्शा
+## 2. Project overview diagram
 
 ```mermaid
 flowchart TD
-    Farmer[किसान / उपयोगकर्ता]
-    Web[Web app: React और Vite]
-    Mobile[Mobile app: React Native और Expo]
+    Farmer[Farmer / user]
+    Web[Web app: React and Vite]
+    Mobile[Mobile app: React Native and Expo]
     DB[(Supabase / PostgreSQL)]
-    API[FastAPI AI services]
+    API[FastAPI services]
     Weather[Open-Meteo / OpenWeather]
     Map[OpenStreetMap location service]
-    Mandi[मंडी कीमत और अनुमान]
+    Mandi[Mandi prices and estimates]
     Fert[Fertilizer planner]
-    Scheme[Scheme matcher और claim PDF]
-    Bot[खेती का chatbot]
+    Scheme[Scheme matcher and claim PDF]
+    Bot[Farming chatbot]
     SAR[SAR background worker]
     GEE[Google Earth Engine: Sentinel-1]
     PostGIS[(PostgreSQL + PostGIS)]
@@ -49,169 +49,169 @@ flowchart TD
     SAR --> PostGIS
 ```
 
-**ध्यान दें:** Web और mobile कुछ सुविधाएँ सीधे Supabase या मौसम/location APIs से लेते हैं। मंडी, fertilizer, schemes और chatbot के लिए backend service की जरूरत पड़ती है। SAR worker अलग से चलने वाला optional data-processing हिस्सा है।
+**Note:** The web and mobile apps connect directly to some services, such as Supabase and weather/location providers. Mandi, fertilizer, schemes, and chatbot features need backend services. The SAR worker is a separate, optional data-processing program.
 
-## 3. उपयोगकर्ता का सामान्य flow
+## 3. Typical user flow
 
 ```mermaid
 flowchart LR
-    Start([App खोलें]) --> Login[Login / account]
-    Login --> Register[किसान और खेत की जानकारी भरें]
-    Register --> Dashboard[Dashboard देखें]
-    Dashboard --> Weather[मौसम और स्थान]
-    Dashboard --> Mandi[फसल बेचने की मंडी]
-    Dashboard --> Fertilizer[खाद की योजना]
-    Dashboard --> Schemes[योजना की जानकारी]
-    Dashboard --> Chat[खेती का सवाल पूछें]
+    Start([Open the app]) --> Login[Log in / create account]
+    Login --> Register[Enter farmer and farm details]
+    Register --> Dashboard[View dashboard]
+    Dashboard --> Weather[Weather and location]
+    Dashboard --> Mandi[Where to sell crops]
+    Dashboard --> Fertilizer[Fertilizer plan]
+    Dashboard --> Schemes[Scheme information]
+    Dashboard --> Chat[Ask a farming question]
 ```
 
-किसान का profile/location हर feature में समान रूप से इस्तेमाल होगा या नहीं, यह अलग-अलग feature की implementation और भरी गई जानकारी पर निर्भर है। कुछ APIs को फसल, जमीन, जिला या location अलग से देना पड़ सकता है।
+Whether a farmer's profile or location is used by every feature depends on that feature's implementation and the information provided. Some APIs may need crop, land size, district, or location as separate inputs.
 
-## 4. Project के मुख्य हिस्से
+## 4. Main parts of the project
 
 ### A. Web application
 
-**जगह:** `client/`
+**Location:** `client/`
 
-- React 18 और Vite से बना browser में चलने वाला app।
-- मुख्य रास्ता: login → registration → dashboard।
-- Dashboard में overview, weather, mandi, advisory, fertilizer, schemes, alerts और calendar जैसे sections/tabs हैं।
-- Login के बाद farmer/farm की जानकारी registration में भरी जा सकती है।
-- Registered उपयोगकर्ता के लिए Kisan Mitra chatbot का widget भी है।
-- Web में Google translation के widget/API का code है; translation के लिए network और configuration/provider उपलब्ध होना जरूरी है।
+- A browser-based app built with React 18 and Vite.
+- Main path: login → registration → dashboard.
+- Dashboard sections/tabs include overview, weather, mandi, advisory, fertilizer, schemes, alerts, and calendar.
+- After login, a farmer can enter farmer and farm details in registration.
+- A Kisan Mitra chatbot widget is also available for registered users.
+- The web app includes code for Google translation widgets/APIs. Translation depends on network access and a correctly configured provider.
 
-मुख्य code: `client/src/App.jsx`, `client/src/pages/`, `client/src/components/`, `client/src/lib/`।
+Main code: `client/src/App.jsx`, `client/src/pages/`, `client/src/components/`, and `client/src/lib/`.
 
 ### B. Mobile application
 
-**जगह:** `mobile/`
+**Location:** `mobile/`
 
-- React Native और Expo आधारित app।
-- इसमें login/account, registration और dashboard screens हैं।
-- Mobile dashboard में मौसम और mandi से जुड़ी सुविधा मौजूद है।
-- Web app के मुकाबले mobile version में सभी sections समान रूप से नहीं हैं: source में fertilizer, schemes, chatbot और translation के dedicated mobile screens नहीं मिले।
-- Location सुविधा के लिए device location permission मांगी जा सकती है।
+- A React Native app built with Expo.
+- It has login/account, registration, and dashboard screens.
+- The mobile dashboard includes weather and mandi features.
+- The mobile app does not have the same set of screens as the web app. The inspected source does not show dedicated mobile screens for fertilizer, schemes, chatbot, or translation.
+- The app may ask for device location permission to use location features.
 
-मुख्य code: `mobile/App.js`, `mobile/src/screens/`, `mobile/src/navigation/`, `mobile/src/lib/`।
+Main code: `mobile/App.js`, `mobile/src/screens/`, `mobile/src/navigation/`, and `mobile/src/lib/`.
 
-### C. Login और किसान का profile
+### C. Login and farmer profile
 
-- Web और mobile दोनों में Supabase client का उपयोग है।
-- Farmer की login/profile और खेत की registration जानकारी से जुड़े code मौजूद हैं।
-- Database का शुरुआती schema `docs/registration-table.sql` में है; उसमें `farmers` और `registrations` tables तथा Row Level Security policies शामिल हैं।
-- Login/session का सटीक तरीका web और mobile implementation में अलग-अलग हो सकता है। अपना project चलाते समय Supabase project, database schema और सही environment values देना जरूरी है।
-- `.env.sample` और `.env.example` में खाली/example values हैं। असली credentials केवल अपनी local `.env` में रखें; उसे GitHub पर upload न करें।
+- Both web and mobile apps use a Supabase client.
+- The source includes farmer profile/login and farm registration code.
+- The initial database schema is in `docs/registration-table.sql`. It defines `farmers` and `registrations` tables and Row Level Security policies.
+- The exact login/session approach can differ between the web and mobile implementations. Running the project requires a Supabase project, the required database schema, and correct environment values.
+- `.env.sample` and `.env.example` contain blank/example values. Keep real credentials only in your local `.env`; never upload that file to GitHub.
 
-### D. मौसम (Weather)
+### D. Weather
 
-**मुख्य code:** `client/src/lib/farmWeather.js`, `mobile/src/lib/farmWeather.js`
+**Main code:** `client/src/lib/farmWeather.js`, `mobile/src/lib/farmWeather.js`
 
-- App खेत/गाँव का स्थान और coordinates खोजने की कोशिश करता है।
-- Open-Meteo से मौसम forecast और air quality ली जा सकती है; इस रास्ते में सामान्यतः API key की जरूरत नहीं होती।
-- OpenStreetMap के Nominatim का उपयोग geocoding/reverse geocoding के लिए हो सकता है।
-- वैकल्पिक OpenWeatherMap configuration भी मौजूद है; सही key न होने पर उस provider की सुविधा उपलब्ध नहीं होगी।
-- मौसम का सही परिणाम internet, सही location और बाहरी provider की availability पर निर्भर करता है।
+- The app tries to find the farm/village location and its coordinates.
+- Open-Meteo can provide forecasts and air-quality information. This provider generally does not require an API key.
+- OpenStreetMap Nominatim may be used for geocoding and reverse geocoding.
+- There is also optional OpenWeatherMap configuration. Its features will not be available without a valid key.
+- Accurate results depend on internet access, a correct location, and the availability of external providers.
 
-### E. मंडी सलाह (Mandi Intelligence)
+### E. Mandi advice (Mandi Intelligence)
 
-**मुख्य code:** `AIML/mandi_intelligence/`
+**Main code:** `AIML/mandi_intelligence/`
 
-- किसान crop, quantity और location/coordinates जैसी जानकारी देता है।
-- Service उपलब्ध mandis और price data देखती है।
-- Code historical/local CSV data से mandi/crop के हिसाब से price prediction model चलाता है; model files `ml_arbitrage/models/` में हैं।
-- अनुमानित कमाई में दूरी/transport, storage, crop खराब होने की संभावना (perishability) और traffic जैसे खर्च घटाकर mandi rank की जाती है।
-- यह **live mandi feed होने की गारंटी नहीं है**: repository में dataset file मौजूद है, लेकिन उससे अपने-आप real-time AGMARKNET connection सिद्ध नहीं होता।
-- Forecast/model उपलब्ध न होने पर अनुमान सीमित हो सकता है; इसे बाजार भाव की पक्की गारंटी न मानें।
+- The farmer provides inputs such as crop, quantity, and location/coordinates.
+- The service looks at available mandis and price data.
+- The code uses historical/local CSV data and price-prediction models for mandi/crop combinations. Model files are in `ml_arbitrage/models/`.
+- Mandi options are ranked by estimated profit after costs such as distance/transport, storage, perishability, and traffic.
+- A **live mandi data feed is not guaranteed**. A dataset in the repository does not, by itself, prove a real-time connection to AGMARKNET or another market feed.
+- If forecasts or models are unavailable, estimates may be limited. Treat them as estimates, not guaranteed market prices.
 
-### F. खाद की योजना (Fertilizer Plan)
+### F. Fertilizer plan
 
-**मुख्य code:** `client/src/components/FertilizerAdvisor.jsx`, `AIML/ml/fertilizer_router.py`
+**Main code:** `client/src/components/FertilizerAdvisor.jsx`, `AIML/ml/fertilizer_router.py`
 
-- Crop, season, खेत का area/land size और district जैसे inputs लेकर urea, DAP और MOP की अनुमानित मात्रा/समय-सारणी बताता है।
-- Server-side calculation में crop के base NPK rates, Gujarat district CSV में दी मिट्टी/pH/irrigation जानकारी, तथा उपलब्ध NDVI और rainfall जैसे inputs शामिल होते हैं।
-- यह code आधारित **rule/formula वाला planner** है, trained machine-learning model या खेत की असली laboratory soil test नहीं।
-- गलत district, crop, area या अनुमानित input से सलाह बदल सकती है। असली उपयोग से पहले local agriculture expert/soil test से पुष्टि करें।
+- The planner uses inputs such as crop, season, land area, and district to suggest estimated amounts and a schedule for urea, DAP, and MOP.
+- Server-side calculations use crop NPK baselines, soil/pH/irrigation information from the Gujarat district CSV, and available inputs such as NDVI and rainfall.
+- This is a **rule/formula-based planner**. It is not a trained machine-learning model and does not use an actual laboratory soil test for the farmer's field.
+- Incorrect district, crop, area, or estimated inputs can change the advice. Confirm important decisions with a local agriculture expert or a soil test.
 
-### G. सरकारी योजनाएँ और claim PDF
+### G. Government schemes and claim PDF
 
-**मुख्य code:** `AIML/scrapbot/src/`
+**Main code:** `AIML/scrapbot/src/`
 
-- किसान की state/category जैसी जानकारी के आधार पर scheme records को filter/score करके recommendations देता है।
-- Scheme records `schemes_db.json` में हैं। Scraper code में scraping का simulation/mock behavior है; इसका अर्थ यह नहीं कि app हर सरकारी portal से अभी live जानकारी खींच रहा है। योजना की शर्तें official government website पर जाँचें।
-- Claim feature किसान के दिए data से PMFBY-style assessment/PDF बना सकता है।
-- Generated PDF एक सहायक draft/form है—यह official submission, verified damage assessment या insurance approval नहीं है। Claim को संबंधित सरकारी/बीमा संस्था के पास अलग से जमा करना पड़ता है।
+- The service filters and scores scheme records using details such as the farmer's state and category.
+- Scheme records are stored in `schemes_db.json`. The scraper code uses simulated/mock scraping behavior; this does not mean the app currently gets live information from every government portal. Check scheme rules on official government websites.
+- The claim feature can create a PMFBY-style assessment/PDF from information provided by the farmer.
+- The generated PDF is a helpful draft/form. It is not an official submission, verified damage assessment, or insurance approval. The claim must be submitted separately to the relevant government or insurance organization.
 
-### H. खेती का chatbot
+### H. Farming chatbot
 
-**मुख्य code:** `AIML/chatbot/main.py`, `client/src/components/ChatbotWidget.jsx`
+**Main code:** `AIML/chatbot/main.py`, `client/src/components/ChatbotWidget.jsx`
 
-- उपयोगकर्ता खेती से जुड़ा सवाल भेजता है; web app बातचीत का कुछ पिछला संदर्भ और उपलब्ध farmer context भेज सकती है।
-- Backend configured OpenAI या Gemini provider से उत्तर लेने की कोशिश करता है। Provider API key/network की जरूरत हो सकती है।
-- Key/provider उपलब्ध न हो तो असली AI उत्तर नहीं मिल सकता।
-- Chatbot के उत्तर को मंडी का live rate, सरकारी approval या विशेषज्ञ की पक्की सलाह न मानें; source में chatbot के लिए live mandi/weather/scheme data का स्वतः जुड़ना सुनिश्चित नहीं है।
+- The user submits a farming question. The web app may send some previous conversation and available farmer context with it.
+- The backend tries to get an answer from a configured OpenAI or Gemini provider. A provider API key and internet access may be required.
+- Without a configured key/provider, a real AI answer may not be available.
+- Do not treat chatbot responses as live mandi prices, government approvals, or guaranteed expert advice. The source does not ensure that live mandi, weather, or scheme data is automatically connected to chatbot answers.
 
-### I. SAR satellite processing (अलग/optional हिस्सा)
+### I. SAR satellite processing (separate/optional part)
 
-**जगह:** `sar_processing/`
+**Location:** `sar_processing/`
 
-SAR का मतलब Synthetic Aperture Radar है—satellite radar data, जो बादलों/रात की स्थिति में भी कुछ तरह की जमीन की जानकारी लेने में उपयोगी हो सकता है। इस repo में इसका worker अलग से चलाया जाता है।
+SAR means Synthetic Aperture Radar. Satellite radar data can help observe some ground conditions, including when it is cloudy or dark. In this repository, SAR is processed by a separate worker.
 
 ```mermaid
 flowchart TD
-    Fields[(PostGIS fields: खेत की सीमा)] --> Worker[SAR worker]
+    Fields[(PostGIS fields: field boundaries)] --> Worker[SAR worker]
     Worker --> GEE[Google Earth Engine]
     GEE --> S1[Sentinel-1 VV/VH data]
-    S1 --> Compare[वर्तमान 7 दिन बनाम पिछले 7 दिन]
-    Compare --> Rules[Moisture बदलाव और flood rules]
+    S1 --> Compare[Compare current 7 days with previous 7 days]
+    Compare --> Rules[Moisture-change and flood rules]
     Rules --> Results[(sar_features table)]
 ```
 
-- Worker खेत की polygon boundary database से लेता है और Google Earth Engine में Sentinel-1 (`COPERNICUS/S1_GRD`) data मांगता है।
-- VV/VH backscatter के वर्तमान और पिछले समय के औसत में अंतर निकाला जाता है।
-- Rule-based threshold से moisture स्थिति (`high`, `low`, `normal`) और flood flag बनता है।
-- परिणाम PostGIS database की `sar_features` table में जाता है।
-- इसके लिए PostgreSQL/PostGIS, database connection और Google Earth Engine authentication/configuration जरूरी है।
-- SAR worker app के सामान्य `npm run dev` से अपने-आप शुरू नहीं होता। यदि Earth Engine असली data नहीं दे पाता, code में stub/fallback result का रास्ता भी है; उसे live satellite analysis नहीं समझना चाहिए।
+- The worker reads field polygon boundaries from the database and requests Sentinel-1 (`COPERNICUS/S1_GRD`) data from Google Earth Engine.
+- It calculates the difference between current and previous averages of VV/VH backscatter values.
+- Rule-based thresholds classify moisture as `high`, `low`, or `normal`, and set a flood flag.
+- Results are saved to the PostGIS `sar_features` table.
+- This requires PostgreSQL/PostGIS, a database connection, and Google Earth Engine authentication/configuration.
+- The SAR worker does not start automatically with the regular `npm run dev` command. The code also has a stub/fallback path if Earth Engine cannot provide real data; that output should not be considered live satellite analysis.
 
-### J. Yield prediction और अतिरिक्त utilities
+### J. Yield prediction and extra utilities
 
-- Unified API में batch yield prediction route मौजूद है, जो external Java model/configuration पर निर्भर है। Default model path एक developer machine का path हो सकता है; दूसरे computer पर चलाने से पहले इसे configure करना पड़ सकता है।
-- Root में `generate_pdf.py`, `generate_srs_pdf.py`, `generate_academic_srs_pdf.py` documentation/PDF बनाने की scripts हैं; वे main web app के runtime feature नहीं हैं।
-- `docs/` में database setup SQL है। `AIML/` में API tests और model/data परीक्षण scripts मौजूद हैं।
+- The unified API includes a batch yield-prediction route that depends on an external Java model/configuration. Its default model path may point to a developer's computer and may need to be changed before it works elsewhere.
+- The root scripts `generate_pdf.py`, `generate_srs_pdf.py`, and `generate_academic_srs_pdf.py` create documentation/PDF files; they are not runtime features of the main app.
+- `docs/` contains database setup SQL. `AIML/` contains API, model, and data test scripts.
 
-## 5. Backend और API services
+## 5. Backend and API services
 
-**मुख्य API:** `AIML/main.py` में FastAPI application अलग sub-services को जोड़ता है। Root के `package.json` में AIML को port **8001** पर चलाने की script है। पुराने README या अलग configuration में port 8000 भी दिख सकता है—अपने local run के लिए `package.json`/Vite proxy की current settings देखें।
+**Main API:** `AIML/main.py` contains the FastAPI app that connects separate services. The root `package.json` starts AIML on port **8001**. Older README files or other configurations may mention port 8000; for local development, check the current `package.json` and Vite proxy settings.
 
-मुख्य routes (mount/configuration सफल होने पर):
+Main routes (when the service is mounted/configured successfully):
 
-| Route | काम |
+| Route | Purpose |
 |---|---|
-| `GET /`, `GET /health` | Service की basic स्थिति |
-| `/mandi/...` | Mandi list, health और recommendation APIs |
-| `POST /mandi/response` | फसल/मात्रा/location के आधार पर मंडी सुझाव |
-| `GET /chatbot/default-questions`, `POST /chatbot/ask` | Chatbot prompts और जवाब |
-| `/schemes/...` | Scheme recommendation और claim PDF, Scrapbot load होने पर |
+| `GET /`, `GET /health` | Basic service status |
+| `/mandi/...` | Mandi list, health, and recommendation APIs |
+| `POST /mandi/response` | Mandi suggestions based on crop/quantity/location |
+| `GET /chatbot/default-questions`, `POST /chatbot/ask` | Chatbot prompts and answers |
+| `/schemes/...` | Scheme recommendations and claim PDF, if Scrapbot loads |
 | `GET /api/fertilizer/recommend` | Fertilizer recommendation |
-| `POST /yield/predict-batch` | Configured external model से yield अनुमान |
+| `POST /yield/predict-batch` | Yield estimate from a configured external model |
 
-एक route का code मौजूद होने का मतलब यह नहीं कि उसके लिए external key, database, model या जरूरी Python package पहले से configured है।
+The existence of a route in code does not mean its external API key, database, model, or required Python package is already configured.
 
-## 6. कौन-सा data/API कहाँ से आता है?
+## 6. Where the data and APIs come from
 
-| Data या service | Source | जरूरी बात |
+| Data or service | Source | Important note |
 |---|---|---|
-| किसान profile/registration | Supabase/PostgreSQL | Supabase project और schema setup करें |
-| मौसम/forecast | Open-Meteo; optional OpenWeatherMap | Open-Meteo सामान्यतः बिना key; OWM के लिए key |
-| स्थान/coordinates | OpenStreetMap Nominatim/device location | Internet/permission और सही address जरूरी |
-| मंडी price/model | Repository की local CSV और model files | Live market feed की गारंटी नहीं |
-| Fertilizer soil inputs | `AIML/ml/gujarat_districts.csv` और code rules | Gujarat districts/data तक सीमित हो सकता है |
-| Scheme list | `AIML/scrapbot/src/schemes_db.json` | Mock/curated dataset; official source पर verify करें |
-| Chatbot response | Configured OpenAI या Gemini provider | Provider API key/network की जरूरत |
-| Satellite SAR | Google Earth Engine Sentinel-1 | Authentication और PostGIS setup जरूरी |
-| Yield prediction | External Java model | Model path/runtime configure करना पड़ेगा |
+| Farmer profile/registration | Supabase/PostgreSQL | Set up a Supabase project and database schema |
+| Weather/forecast | Open-Meteo; optional OpenWeatherMap | Open-Meteo generally needs no key; OpenWeatherMap does |
+| Location/coordinates | OpenStreetMap Nominatim/device location | Internet/location permission and a correct address may be needed |
+| Mandi prices/models | Local CSV and model files in the repository | A live market feed is not guaranteed |
+| Fertilizer soil inputs | `AIML/ml/gujarat_districts.csv` and code rules | Data may be limited to Gujarat districts |
+| Scheme list | `AIML/scrapbot/src/schemes_db.json` | Mock/curated data; verify on official sources |
+| Chatbot response | Configured OpenAI or Gemini provider | Provider API key and internet may be required |
+| Satellite SAR | Google Earth Engine Sentinel-1 | Authentication and PostGIS setup are required |
+| Yield prediction | External Java model | Model path/runtime may need configuration |
 
-## 7. Repository का folder map
+## 7. Repository folder map
 
 ```text
 Crop-Wise/
@@ -219,43 +219,43 @@ Crop-Wise/
 ├── mobile/                 # Expo + React Native mobile app
 ├── AIML/                   # FastAPI, mandi, fertilizer, schemes, chatbot
 │   ├── mandi_intelligence/  # Mandi dataset, models, recommendation logic
-│   ├── ml/                  # Fertilizer rules और district data
-│   ├── scrapbot/            # Scheme matching और claim PDF
+│   ├── ml/                  # Fertilizer rules and district data
+│   ├── scrapbot/            # Scheme matching and claim PDF
 │   └── chatbot/              # AI chatbot API
-├── sar_processing/         # Sentinel-1/GEE worker और PostGIS processing
+├── sar_processing/         # Sentinel-1/GEE worker and PostGIS processing
 ├── docs/                   # Database setup/documentation files
-├── .env.sample              # Environment variables के example/placeholders
+├── .env.sample              # Example/placeholders for environment variables
 ├── package.json             # Main development/build commands
-└── run-servers.bat          # Local services शुरू करने की Windows script
+└── run-servers.bat          # Windows script to start local services
 ```
 
-## 8. Local में चलाने का सामान्य तरीका
+## 8. General steps to run locally
 
-Project के root folder में:
+From the project root folder:
 
 ```powershell
 Copy-Item .env.sample .env
-# अब अपनी local .env file में Supabase URL/key भरें
+# Now add your Supabase URL/key to the local .env file
 npm install
 npm run dev
 ```
 
-Root scripts के अनुसार `npm run dev` web client और AIML service दोनों शुरू करता है। Web app सामान्यतः `http://localhost:5173` और AIML service `http://localhost:8001` पर होती है। Python dependencies भी AIML के requirements/pyproject के अनुसार install होनी चाहिए। Mobile app और SAR worker अलग setup/commands से चलाए जाते हैं; उनके README देखें।
+According to the root scripts, `npm run dev` starts the web client and AIML service. The web app is normally at `http://localhost:5173` and the AIML service at `http://localhost:8001`. Install Python dependencies according to the AIML requirements/pyproject files. The mobile app and SAR worker have separate setup/commands; see their README files.
 
-**Secrets की सुरक्षा:** `.env` में अपने credentials रखें, उसे commit या public repo में upload न करें। केवल placeholder वाली `.env.sample`/`.env.example` share करें। API keys को chat, screenshot या public code में न डालें।
+**Keep secrets safe:** Put your credentials in `.env`, and do not commit or upload it to the public repository. Share only placeholder files such as `.env.sample` or `.env.example`. Do not put API keys in chat, screenshots, or public code.
 
-## 9. अभी की सीमाएँ / deployment से पहले जाँच
+## 9. Current limitations and checks before deployment
 
-1. Mandi price dataset repository में मौजूद है; live prices का external connection सुनिश्चित नहीं है।
-2. Government scheme records scraper से real-time सरकारी जानकारी होने की गारंटी नहीं; official site से details verify करें।
-3. Claim PDF मददगार draft है, official claim approval नहीं।
-4. Fertilizer advice rules/district data पर आधारित है, laboratory soil test पर नहीं।
-5. Chatbot और कुछ optional services के लिए अलग provider keys और internet चाहिए।
-6. SAR के लिए database और Earth Engine अलग configure करना होगा; सामान्य web startup उसे नहीं चलाता।
-7. Mobile app, web app और backend के features बराबर नहीं हैं।
-8. कुछ पुराने README/setup विवरण actual scripts/ports से अलग हो सकते हैं; run configuration के लिए `package.json`, Vite config और संबंधित module README देखें।
-9. Public deployment से पहले environment variables, API CORS/proxy, Supabase policies, external API availability और production build/deployment settings को जाँचें। GitHub पर code होना अपने-आप app deploy नहीं करता।
+1. The repository includes mandi price data, but a live external price feed is not guaranteed.
+2. The scheme scraper does not guarantee real-time government data; verify details on official websites.
+3. The claim PDF is a helpful draft, not an approved official claim.
+4. Fertilizer advice uses rules and district data, not a laboratory soil test.
+5. The chatbot and some optional services need separate provider keys and internet access.
+6. SAR needs separate database and Earth Engine configuration; the regular web startup does not run it.
+7. The mobile app, web app, and backend do not have identical features.
+8. Some older README/setup details may differ from the actual scripts and ports. Check `package.json`, the Vite config, and the relevant module README for current run instructions.
+9. Before public deployment, check environment variables, API CORS/proxy settings, Supabase policies, external API availability, and production build/deployment settings. Putting code on GitHub does not deploy the app by itself.
 
-## 10. एक वाक्य में पूरा project
+## 10. The whole project in one sentence
 
-**Crop-Wise एक student-built agriculture platform है जो web/mobile dashboard, मौसम, मंडी सलाह, fertilizer planner, scheme information, chatbot और optional satellite-based field analysis को जोड़ता है—लेकिन हर feature को सही data, external services और configuration के साथ verify करके ही वास्तविक खेती/सरकारी फैसलों में इस्तेमाल करना चाहिए।**
+**Crop-Wise is a student-built agriculture platform that brings together web/mobile dashboards, weather, mandi advice, a fertilizer planner, scheme information, a chatbot, and optional satellite-based field analysis—but every feature should be checked with the correct data, external services, and configuration before being used for real farming or government decisions.**
